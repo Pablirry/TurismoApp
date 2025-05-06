@@ -79,14 +79,15 @@ public class TurismoService {
         return valoracionDAO.registrarValoracionRestaurante(valoracion);
     }
 
-    public boolean valorarRestaurante(int idRestaurante, int idUsuario, int puntuacion, String comentario) throws ClassNotFoundException {
-    ValoracionRestaurante valoracion = new ValoracionRestaurante();
-    valoracion.setIdRestaurante(idRestaurante);
-    valoracion.setIdUsuario(idUsuario);
-    valoracion.setPuntuacion(puntuacion);
-    valoracion.setComentario(comentario);
-    return valorarRestaurante(valoracion);
-}
+    public boolean valorarRestaurante(int idRestaurante, int idUsuario, int puntuacion, String comentario)
+            throws ClassNotFoundException {
+        ValoracionRestaurante valoracion = new ValoracionRestaurante();
+        valoracion.setIdRestaurante(idRestaurante);
+        valoracion.setIdUsuario(idUsuario);
+        valoracion.setPuntuacion(puntuacion);
+        valoracion.setComentario(comentario);
+        return valorarRestaurante(valoracion);
+    }
 
     public List<ValoracionRuta> obtenerValoracionesRuta(int idRuta) throws ClassNotFoundException {
         return valoracionDAO.obtenerValoracionesRuta(idRuta);
@@ -131,7 +132,8 @@ public class TurismoService {
 
     // Reservas
     public boolean reservarRuta(int idUsuario, int idRuta, Date fecha) throws ClassNotFoundException {
-        return reservaDAO.reservarRuta(idUsuario, idRuta, fecha);
+        Reserva reserva = new Reserva(0, idUsuario, idRuta, fecha, false); // false = no confirmada
+        return reservaDAO.reservarRuta(reserva);
     }
 
     public List<Reserva> obtenerReservasUsuario(int idUsuario) throws ClassNotFoundException {
@@ -173,5 +175,5 @@ public class TurismoService {
     public boolean marcarMensajeComoLeido(int idMensaje) throws ClassNotFoundException {
         return mensajeDAO.marcarMensajeComoLeido(idMensaje);
     }
-    
+
 }

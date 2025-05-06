@@ -121,100 +121,106 @@ public class ThemeManager {
         }
     }
 
-    public static void setComponentTheme(Component comp, Theme theme) {
+        public static void setComponentTheme(Component comp, Theme theme) {
+        // COLORES CONSISTENTES EN TODAS LAS VENTANAS
+        // --- PALETA CLARO ---
+        final Color LIGHT_BG = new Color(236, 240, 241);
+        final Color LIGHT_PANEL = Color.WHITE;
+        final Color LIGHT_BORDER = new Color(44, 62, 80);
+        final Color LIGHT_TEXT = new Color(44, 62, 80);
+        final Color LIGHT_BUTTON = new Color(52, 152, 219);
+        final Color LIGHT_BUTTON_TEXT = Color.WHITE;
+        // --- PALETA OSCURO ---
+        final Color DARK_BG = new Color(44, 62, 80);
+        final Color DARK_PANEL = new Color(52, 73, 94);
+        final Color DARK_BORDER = new Color(33, 47, 60);
+        final Color DARK_TEXT = Color.WHITE;
+        final Color DARK_BUTTON = new Color(52, 152, 219);
+        final Color DARK_BUTTON_TEXT = Color.WHITE;
+    
         if (comp instanceof JPanel) {
             if (theme == Theme.DARK) {
-                comp.setBackground(new Color(52, 73, 94));
+                comp.setBackground(DARK_PANEL);
             } else {
-                comp.setBackground(new Color(236, 240, 241));
+                comp.setBackground(LIGHT_PANEL);
             }
-            // Borde redondeado para ambos modos
-            Border rounded = new RoundedBorder(
-                    theme == Theme.DARK ? new Color(33, 47, 60) : new Color(44, 62, 80),
-                    3, 18);
-            ((JPanel) comp).setBorder(rounded);
+            // Borde recto y color consistente
+            Border border = BorderFactory.createLineBorder(theme == Theme.DARK ? DARK_BORDER : LIGHT_BORDER, 2);
+            ((JPanel) comp).setBorder(border);
         }
         if (comp instanceof JLabel) {
-            Color bg = comp.getBackground();
             if (theme == Theme.DARK) {
-                ((JLabel) comp).setForeground(Color.WHITE);
+                ((JLabel) comp).setForeground(DARK_TEXT);
             } else {
-                if (bg != null && (bg.equals(Color.WHITE) || bg.equals(new Color(236, 240, 241)))) {
-                    ((JLabel) comp).setForeground(new Color(44, 62, 80));
-                } else {
-                    ((JLabel) comp).setForeground(Color.BLACK);
-                }
+                ((JLabel) comp).setForeground(LIGHT_TEXT);
             }
         }
         if (comp instanceof JSlider) {
             JSlider slider = (JSlider) comp;
             if (theme == Theme.DARK) {
-                slider.setBackground(new Color(52, 73, 94));
-                slider.setForeground(Color.WHITE);
+                slider.setBackground(DARK_PANEL);
+                slider.setForeground(DARK_TEXT);
                 slider.setOpaque(true);
-                UIManager.put("Slider.trackColor", new Color(44, 62, 80));
+                UIManager.put("Slider.trackColor", DARK_BG);
                 UIManager.put("Slider.thumb", new Color(189, 195, 199));
-                UIManager.put("Slider.tickColor", Color.WHITE);
+                UIManager.put("Slider.tickColor", DARK_TEXT);
             } else {
-                slider.setBackground(new Color(236, 240, 241));
-                slider.setForeground(new Color(44, 62, 80));
+                slider.setBackground(LIGHT_PANEL);
+                slider.setForeground(LIGHT_TEXT);
                 slider.setOpaque(true);
                 UIManager.put("Slider.trackColor", new Color(189, 195, 199));
-                UIManager.put("Slider.thumb", new Color(52, 152, 219));
-                UIManager.put("Slider.tickColor", new Color(44, 62, 80));
+                UIManager.put("Slider.thumb", LIGHT_BUTTON);
+                UIManager.put("Slider.tickColor", LIGHT_TEXT);
             }
             SwingUtilities.updateComponentTreeUI(slider);
         }
         if (comp instanceof JTable) {
             JTable table = (JTable) comp;
             if (theme == Theme.DARK) {
-                table.setBackground(new Color(52, 73, 94));
-                table.setForeground(Color.WHITE);
-                table.setSelectionBackground(new Color(33, 47, 60));
-                table.setSelectionForeground(Color.WHITE);
-                table.setGridColor(new Color(44, 62, 80));
+                table.setBackground(DARK_PANEL);
+                table.setForeground(DARK_TEXT);
+                table.setSelectionBackground(DARK_BORDER);
+                table.setSelectionForeground(DARK_TEXT);
+                table.setGridColor(DARK_BG);
             } else {
-                table.setBackground(Color.WHITE);
-                table.setForeground(Color.BLACK);
-                table.setSelectionBackground(new Color(52, 152, 219));
-                table.setSelectionForeground(Color.WHITE);
-                table.setGridColor(new Color(236, 240, 241));
+                table.setBackground(LIGHT_PANEL);
+                table.setForeground(LIGHT_TEXT);
+                table.setSelectionBackground(LIGHT_BUTTON);
+                table.setSelectionForeground(LIGHT_BUTTON_TEXT);
+                table.setGridColor(LIGHT_BG);
             }
             JTableHeader header = table.getTableHeader();
             if (header != null) {
                 if (theme == Theme.DARK) {
-                    header.setBackground(new Color(44, 62, 80));
-                    header.setForeground(Color.WHITE);
+                    header.setBackground(DARK_BG);
+                    header.setForeground(DARK_TEXT);
                 } else {
-                    header.setBackground(new Color(236, 240, 241));
-                    header.setForeground(new Color(44, 62, 80));
+                    header.setBackground(LIGHT_BG);
+                    header.setForeground(LIGHT_TEXT);
                 }
             }
         }
         if (comp instanceof JButton) {
             JButton btn = (JButton) comp;
-            Color colorBase = (Color) btn.getClientProperty("colorBase");
-            if (colorBase == null) {
-                colorBase = theme == Theme.DARK ? new Color(52, 152, 219) : new Color(52, 152, 219);
-            }
+            Color colorBase = theme == Theme.DARK ? DARK_BUTTON : LIGHT_BUTTON;
             Color normalBg = colorBase;
             Color hoverBg = colorBase.brighter();
             Color pressedBg = colorBase.darker();
-
-            // Borde más grueso y radio más grande para más redondeo
+    
+            // Borde redondeado solo para botones
             Border rounded = new RoundedBorder(
-                    theme == Theme.DARK ? colorBase : new Color(44, 62, 80),
+                    colorBase,
                     3, 24 // grosor 3, radio 24
             );
             btn.setBorder(rounded);
-
+    
             btn.setBackground(normalBg);
-            btn.setForeground(theme == Theme.DARK ? Color.WHITE : Color.BLACK);
+            btn.setForeground(theme == Theme.DARK ? DARK_BUTTON_TEXT : LIGHT_BUTTON_TEXT);
             btn.setFont(new Font("Dialog", Font.BOLD, 18));
             btn.setMargin(new Insets(12, 24, 12, 24));
-            btn.setContentAreaFilled(true); // Fondo sólido
-            btn.setOpaque(true); // Fondo sólido
-
+            btn.setContentAreaFilled(true);
+            btn.setOpaque(true);
+    
             for (MouseListener ml : btn.getMouseListeners()) {
                 btn.removeMouseListener(ml);
             }
@@ -225,20 +231,20 @@ public class ThemeManager {
                     btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     btn.repaint();
                 }
-
+    
                 @Override
                 public void mouseExited(java.awt.event.MouseEvent e) {
                     btn.setBackground(normalBg);
                     btn.setCursor(Cursor.getDefaultCursor());
                     btn.repaint();
                 }
-
+    
                 @Override
                 public void mousePressed(java.awt.event.MouseEvent e) {
                     btn.setBackground(pressedBg);
                     btn.repaint();
                 }
-
+    
                 @Override
                 public void mouseReleased(java.awt.event.MouseEvent e) {
                     Point p = e.getPoint();
@@ -252,21 +258,59 @@ public class ThemeManager {
             });
         }
         if (comp instanceof JTextField || comp instanceof JTextArea || comp instanceof JPasswordField) {
-            comp.setBackground(theme == Theme.DARK ? new Color(44, 62, 80) : Color.WHITE);
-            comp.setForeground(theme == Theme.DARK ? Color.WHITE : Color.BLACK);
+            comp.setBackground(theme == Theme.DARK ? DARK_BG : LIGHT_PANEL);
+            comp.setForeground(theme == Theme.DARK ? DARK_TEXT : LIGHT_TEXT);
             if (comp instanceof JTextComponent) {
-                ((JTextComponent) comp).setCaretColor(theme == Theme.DARK ? Color.WHITE : Color.BLACK);
+                ((JTextComponent) comp).setCaretColor(theme == Theme.DARK ? DARK_TEXT : LIGHT_TEXT);
             }
         }
         if (comp instanceof JScrollPane) {
-            comp.setBackground(theme == Theme.DARK ? new Color(44, 62, 80) : Color.WHITE);
-            comp.setForeground(theme == Theme.DARK ? Color.WHITE : Color.BLACK);
+            comp.setBackground(theme == Theme.DARK ? DARK_BG : LIGHT_PANEL);
+            comp.setForeground(theme == Theme.DARK ? DARK_TEXT : LIGHT_TEXT);
         }
         if (comp instanceof Container) {
             for (Component child : ((Container) comp).getComponents()) {
                 setComponentTheme(child, theme);
             }
         }
+    }
+
+    // Método para actualizar el color y hover de todos los botones
+    public static void actualizarColoresBotones(Container container) {
+        for (Component comp : container.getComponents()) {
+            if (comp instanceof JButton) {
+                actualizarBotonHover((JButton) comp);
+            } else if (comp instanceof Container) {
+                actualizarColoresBotones((Container) comp);
+            }
+        }
+    }
+
+    // Método para actualizar el color base y hover de un botón según el tema
+    public static void actualizarBotonHover(JButton btn) {
+        Color colorBase = ThemeManager.getCurrentTheme() == ThemeManager.Theme.DARK
+                ? new Color(44, 62, 80)
+                : new Color(52, 152, 219);
+        Color colorHover = ThemeManager.getCurrentTheme() == ThemeManager.Theme.DARK
+                ? new Color(52, 152, 219)
+                : new Color(41, 128, 185);
+        btn.setBackground(colorBase);
+        btn.setForeground(Color.WHITE);
+
+        // Elimina listeners previos para evitar duplicados
+        for (MouseListener ml : btn.getMouseListeners()) {
+            btn.removeMouseListener(ml);
+        }
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(colorHover);
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(colorBase);
+            }
+        });
     }
 
     public static Theme getCurrentTheme() {

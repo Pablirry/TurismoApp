@@ -74,19 +74,26 @@ public class MenuPrincipal extends JFrame {
         btnTema.setForeground(Color.WHITE);
         btnTema.setBackground(colorFijoBtnTema);
         btnTema.setText(dark ? I18n.t("boton.modo.claro") : I18n.t("boton.modo.oscuro"));
+
+        // Elimina los MouseListener antiguos
         for (MouseListener ml : btnTema.getMouseListeners())
             btnTema.removeMouseListener(ml);
+
         btnTema.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                btnTema.setBackground(btnTema.getBackground());
+                // Efecto hover: azul más oscuro para ambos temas
+                btnTema.setBackground(new Color(41, 128, 185));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                btnTema.setBackground(btnTema.getBackground());
+                // Vuelve al color de fondo según el tema actual
+                boolean darkNow = ThemeManager.getCurrentTheme() == ThemeManager.Theme.DARK;
+                btnTema.setBackground(darkNow ? new Color(44, 62, 80) : new Color(52, 152, 219));
             }
         });
+
         btnTema.addActionListener(e -> {
             boolean esClaro = ThemeManager.getCurrentTheme() == ThemeManager.Theme.LIGHT;
             ThemeManager.setTheme(esClaro ? ThemeManager.Theme.DARK : ThemeManager.Theme.LIGHT, this);

@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.nio.file.Files;
 import java.io.File;
 
@@ -134,10 +135,12 @@ public class AgregarRestaurante extends JFrame {
                     valoracionSeleccionada = estrellaIndex + 1;
                     actualizarEstrellas();
                 }
+
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     resaltarEstrellas(estrellaIndex + 1);
                 }
+
                 @Override
                 public void mouseExited(MouseEvent e) {
                     actualizarEstrellas();
@@ -179,10 +182,20 @@ public class AgregarRestaurante extends JFrame {
     // Efectos visuales para los botones CRUD
     private void setButtonEffects(JButton btn, Color normal, Color hover, Color pressed) {
         btn.setBackground(normal);
-        btn.setForeground(Color.WHITE);
+        // Texto: blanco en oscuro, oscuro y negrita en claro
+        boolean dark = ThemeManager.getCurrentTheme() == ThemeManager.Theme.DARK;
+        btn.setForeground(dark ? Color.WHITE : new Color(44, 62, 80));
+        btn.setFont(new Font("Arial", Font.BOLD, 18));
         btn.setFocusPainted(false);
         btn.setContentAreaFilled(true);
         btn.setOpaque(true);
+
+        // Elimina listeners previos para evitar duplicados
+        for (MouseListener ml : btn.getMouseListeners()) {
+            if (ml.getClass().getName().contains("MouseAdapter")) {
+                btn.removeMouseListener(ml);
+            }
+        }
 
         btn.addMouseListener(new MouseAdapter() {
             @Override

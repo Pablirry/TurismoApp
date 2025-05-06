@@ -1,6 +1,7 @@
 package views;
 
 import model.Ruta;
+import model.Usuario;
 import services.TurismoService;
 
 import javax.swing.*;
@@ -17,6 +18,7 @@ public class EditarRuta extends JDialog {
     private JButton btnGuardar, btnCancelar, btnImagen;
     private File imagenRuta;
     private Ruta rutaOriginal;
+    private Usuario usuario;
 
     public EditarRuta(Ruta ruta) {
         super((Frame) null, "Editar Ruta", true);
@@ -248,5 +250,11 @@ public class EditarRuta extends JDialog {
             JOptionPane.showMessageDialog(this, "Error al actualizar ruta: " + ex.getMessage(), "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        ThemeManager.setTheme(ThemeManager.getCurrentTheme(), VistaRutas.getInstance(this.usuario));
     }
 }

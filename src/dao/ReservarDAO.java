@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import config.ConexionDB;
@@ -13,18 +12,23 @@ import model.Reserva;
 
 public class ReservarDAO {
 
-    public boolean reservarRuta(int idUsuario, int idRuta, Date fecha) throws ClassNotFoundException {
-        String sql = "INSERT INTO reservas (id_usuario, id_ruta, fecha) VALUES (?, ?, ?)";
-        try (Connection con = ConexionDB.getConection();
-                PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, idUsuario);
-            ps.setInt(2, idRuta);
-            ps.setDate(3, new java.sql.Date(fecha.getTime()));
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error reservarRuta: " + e.getMessage());
-            return false;
+    public boolean reservarRuta(Reserva reserva) throws ClassNotFoundException {
+        String sql = "INSERT INTO reservas (id_usuario, id_ruta, fecha, confirmada) VALUES (?, ?, ?, ?)";
+    try (Connection con = ConexionDB.getConection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setInt(1, reserva.getIdUsuario());
+        ps.setInt(2, reserva.getIdRuta());
+        if (reserva.getFecha() != null) {
+            ps.setDate(3, new java.sql.Date(reserva.getFecha().getTime()));
+        } else {
+            ps.setDate(3, null);
         }
+        ps.setBoolean(4, reserva.isConfirmada());
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        System.err.println("Error crearReserva: " + e.getMessage());
+        return false;
+    }
     }
 
     public boolean cancelarReserva(int idReserva) throws ClassNotFoundException {
